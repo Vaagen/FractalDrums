@@ -87,27 +87,32 @@ def plotSquare(handle, coords):
     handle.plot(-coords[:,0]+coords[-1,0],-coords[:,1]+2*coords[-1,1]-coords[-1,0])
     handle.plot(-coords[:,1]+coords[-1,1],coords[:,0]-coords[-1,0]+coords[-1,1])
 
+def getSquareCoords(coords):
+    vec2 = np.array([coords[:,1]+coords[-1,0]-coords[-1,1],-coords[:,0]+coords[-1,1]])
+    vec3 =np.array([-coords[:,0]+coords[-1,0],-coords[:,1]+2*coords[-1,1]-coords[-1,0]])
+    vec4 =np.array([-coords[:,1]+coords[-1,1],coords[:,0]-coords[-1,0]+coords[-1,1]])
+    vec2 = np.transpose(vec2)
+    vec3 = np.transpose(vec3)
+    vec4 = np.transpose(vec4)
+    return np.row_stack((coords,vec2,vec3,vec4))
+
+def rotateCoords45deg(coords):
+    temp = 1./np.sqrt(2.)*(coords[:,0]+coords[:,1])
+    coords[:,1] = 1./np.sqrt(2.)*(coords[:,1]-coords[:,0])
+    coords[:,0] = temp
+
+def rotateCoords(coords,angle):
+    angle = angle*np.pi/180.
+    temp = np.cos(angle)*coords[:,0]+np.sin(angle)*coords[:,1]
+    coords[:,1] = np.cos(angle)*coords[:,1]-np.sin(angle)*coords[:,0]
+    coords[:,0] = temp
+
 
 fig =plt.figure()
-# ax1 = fig.add_subplot(231)
-# ax2 = fig.add_subplot(131)
-# ax3 = fig.add_subplot(132)
-ax4 = fig.add_subplot(111)
-# ax5 = fig.add_subplot(235)
-# ax6 = fig.add_subplot(236)
 
-# coords = genCoords(0,0,100,0)
-# plotSquare(ax1,coords)
-# coords = genCoords(0,0,100,1)
-# plotSquare(ax2,coords)
-# coords = genCoords(0,0,100,2)
-# plotSquare(ax3,coords)
-coords = genCoords(0,0,100,3)
-plotSquare(ax4,coords)
-# coords = genCoords(0,0,100,4)
-# plotSquare(ax5,coords)
-# coords = genCoords(0,0,100,5)
-# plotSquare(ax6,coords)
+coords = genCoords(0,0,100,5)
+
+
 
 plt.show(block=False)
 pause('Showing plot.')
