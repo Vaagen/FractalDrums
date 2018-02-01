@@ -73,23 +73,41 @@ def generator(coords, Ip0, Ip8, currentLevel, goalLevel):
         generator(coords,Ip6,Ip7,currentLevel,goalLevel)
         generator(coords,Ip7,Ip8,currentLevel,goalLevel)
 
+def genCoords(x0,y0,x1, goalLevel):
+    # Generates coordinates for corners along horizontal line from (x0,y0) to (x1,y0)
+    coords = np.zeros((8**goalLevel+1,2))
+    coords[0,:]=[x0,y0]
+    coords[8**goalLevel,:]=[x1,y0]
+    generator(coords,0,8**goalLevel,1,goalLevel)
+    return coords
 
-
-
-coords = np.ones((65,2))
-coords[0,:]=[0,5]
-coords[64,:]=[100,5]
-generator(coords,0,64,0,1)
-print coords
-
-coords = np.ones((513,2))
-coords[0,:]=[0,5]
-coords[512,:]=[100,5]
-generator(coords,0,512,0,2)
+def plotSquare(handle, coords):
+    handle.plot(coords[:,0],coords[:,1])
+    handle.plot(coords[:,1]+coords[-1,0]-coords[-1,1],-coords[:,0]+coords[-1,1])
+    handle.plot(-coords[:,0]+coords[-1,0],-coords[:,1]+2*coords[-1,1]-coords[-1,0])
+    handle.plot(-coords[:,1]+coords[-1,1],coords[:,0]-coords[-1,0]+coords[-1,1])
 
 
 fig =plt.figure()
-ax = fig.add_subplot(111)
-ax.plot(coords[:,0],coords[:,1])
+# ax1 = fig.add_subplot(231)
+# ax2 = fig.add_subplot(131)
+# ax3 = fig.add_subplot(132)
+ax4 = fig.add_subplot(111)
+# ax5 = fig.add_subplot(235)
+# ax6 = fig.add_subplot(236)
+
+# coords = genCoords(0,0,100,0)
+# plotSquare(ax1,coords)
+# coords = genCoords(0,0,100,1)
+# plotSquare(ax2,coords)
+# coords = genCoords(0,0,100,2)
+# plotSquare(ax3,coords)
+coords = genCoords(0,0,100,3)
+plotSquare(ax4,coords)
+# coords = genCoords(0,0,100,4)
+# plotSquare(ax5,coords)
+# coords = genCoords(0,0,100,5)
+# plotSquare(ax6,coords)
+
 plt.show(block=False)
 pause('Showing plot.')
