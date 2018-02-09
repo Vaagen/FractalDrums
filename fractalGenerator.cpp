@@ -104,6 +104,11 @@ void fractalGenerator::generateSquareCoords(arma::mat& coords, double width, int
   // Adding first corner again so that we can iterate through coords and get all edges.
   coords(4*indexJumpPerSide,0)=Xtl;
   coords(4*indexJumpPerSide,1)=Ytl;
+
+  // Rotate if rotate45deg set to true.
+  if(rotate45deg){
+    fractalGenerator::rotate45deg(coords);
+  }
 }
 
 void fractalGenerator::rotate45deg(arma::mat& coords){
