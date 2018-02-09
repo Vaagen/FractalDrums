@@ -4,7 +4,6 @@
 #include <sstream>
 
 int main(int argc, char *argv[]){
-  arma::mat coords;
   // Getting goalLevel.
   int goalLevel;
   if (argc <2){
@@ -15,12 +14,14 @@ int main(int argc, char *argv[]){
   if (!(ss >> goalLevel)){
     std::cerr << "Invalid number " << argv[1] << '\n';
   }
+  // Getting output file name.
   std::string outputFile = "test.txt";
   if (argc>2){
     outputFile = argv[2];
   }
   // Calculating corners.
-  fractalGenerator::generateCoords(coords, -100.0, 2.0, 100.0,goalLevel);
+  arma::mat coords;
+  fractalGenerator::generateSquareCoords(coords, 100, goalLevel, false);
   // Saving output.
   std::ofstream outFile;
   outFile.open(outputFile);

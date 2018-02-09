@@ -68,12 +68,40 @@ void fractalGenerator::generator(arma::mat& coords, int index0, int index8, int 
   }//if
 }//generator
 
-void fractalGenerator::generateCoords(arma::mat& coords, double x0, double y0, double x1, int goalLevel){
+void fractalGenerator::generateLineCoords(arma::mat& coords, int startIndex, double x0, double y0, double x1, double y1, int goalLevel){
   int endIndex = pow(8,goalLevel);
-  coords = arma::zeros(endIndex+1, 2);
-  coords(0,0)=x0;
-  coords(0,1)=y0;
+  coords(startIndex,0)=x0;
+  coords(startIndex,1)=y0;
   coords(endIndex,0)=x1;
-  coords(endIndex,1)=y0;
-  fractalGenerator::generator(coords,0,endIndex,1,goalLevel);
+  coords(endIndex,1)=y1;
+  fractalGenerator::generator(coords,startIndex,endIndex,1,goalLevel);
+}
+
+void fractalGenerator::generateSquareCoords(arma::mat& coords, double width, int goalLevel, bool rotate45deg){
+  int indexJumpPerSide = pow(8,goalLevel);
+  coords = arma::zeros(4*indexJumpPerSide+1, 2);
+  // Cordinates of original 4 corners, t=top, b=bottom, l=left, r=right.
+  double Xtl = -width/2;
+  double Ytl =  width/2;
+  double Xtr =  width/2;
+  double Ytr =  width/2;
+  double Xbr =  width/2;
+  double Ybr = -width/2;
+  double Xbl = -width/2;
+  double Ybl = -width/2;
+  // Generate fractal structure on side of square.
+  int startIndex = 0;
+  fractalGenerator::generateLineCoords(coords,startIndex,Xtl,Ytl,Xtr,Ytr,goalLevel);
+  // Rotate first segment to generate remaining sides.
+  coords.rows(indexJumpPerSide,2*indexJumpPerSide-1).col(0)= coords.rows(0,indexJumpPerSide-1).col(1);
+  coords.rows(indexJumpPerSide,2*indexJumpPerSide-1).col(1)=-coords.rows(0,indexJumpPerSide-1).col(0);
+
+  coords.rows(2*indexJumpPerSide,3*indexJumpPerSide-1).col(0)=-coords.rows(0,indexJumpPerSide-1).col(0);
+  coords.rows(2*indexJumpPerSide,3*indexJumpPerSide-1).col(1)=-coords.rows(0,indexJumpPerSide-1).col(1);
+
+  coords.rows(3*indexJumpPerSide,4*indexJumpPerSide-1).col(0)=-coords.rows(0,indexJumpPerSide-1).col(1);
+  coords.rows(3*indexJumpPerSide,4*indexJumpPerSide-1).col(1)= coords.rows(0,indexJumpPerSide-1).col(0);
+  // Adding first corner again so that we can iterate through coords and get all edges.
+  coords(4*indexJumpPerSide,0)=Xtl;
+  coords(4*indexJumpPerSide,1)=Ytl;
 }
