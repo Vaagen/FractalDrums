@@ -22,6 +22,7 @@ int main(int argc, char *argv[]){
   // Calculating corners.
   arma::mat coords;
   fractalGenerator::generateSquareCoords(coords, 100, goalLevel, false);
+  fractalGenerator::rotate45deg(coords);
   // Saving output.
   std::ofstream outFile;
   outFile.open(outputFile);

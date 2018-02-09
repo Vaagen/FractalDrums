@@ -105,3 +105,10 @@ void fractalGenerator::generateSquareCoords(arma::mat& coords, double width, int
   coords(4*indexJumpPerSide,0)=Xtl;
   coords(4*indexJumpPerSide,1)=Ytl;
 }
+
+void fractalGenerator::rotate45deg(arma::mat& coords){
+  // Rotate input coordinates by 45 degrees.
+  arma::mat temp = 1.0/sqrt(2.0)*(coords.col(0) + coords.col(1));
+  coords.col(0)  = 1.0/sqrt(2.0)*(coords.col(1) - coords.col(0));
+  coords.col(1)  = temp;
+}
