@@ -15,4 +15,8 @@ namespace fractalGenerator{
   void rotate45deg(arma::mat& coords);
 }//namespace
 
+int generateLattice(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
+
+
+
 #endif // #ifndef __fractalGenerator_included__

@@ -81,14 +81,14 @@ void fractalGenerator::generateSquareCoords(arma::mat& coords, double width, int
   int indexJumpPerSide = pow(8,goalLevel);
   coords = arma::zeros(4*indexJumpPerSide+1, 2);
   // Cordinates of original 4 corners, t=top, b=bottom, l=left, r=right.
-  double Xtl = -width/2;
-  double Ytl =  width/2;
-  double Xtr =  width/2;
-  double Ytr =  width/2;
-  double Xbr =  width/2;
-  double Ybr = -width/2;
-  double Xbl = -width/2;
-  double Ybl = -width/2;
+  double Xtl = -width/2.0;
+  double Ytl =  width/2.0;
+  double Xtr =  width/2.0;
+  double Ytr =  width/2.0;
+  double Xbr =  width/2.0;
+  double Ybr = -width/2.0;
+  double Xbl = -width/2.0;
+  double Ybl = -width/2.0;
   // Generate fractal structure on side of square.
   int startIndex = 0;
   fractalGenerator::generateLineCoords(coords,startIndex,Xtl,Ytl,Xtr,Ytr,goalLevel);
@@ -116,4 +116,25 @@ void fractalGenerator::rotate45deg(arma::mat& coords){
   arma::mat temp = 1.0/sqrt(2.0)*(coords.col(0) + coords.col(1));
   coords.col(0)  = 1.0/sqrt(2.0)*(coords.col(1) - coords.col(0));
   coords.col(1)  = temp;
+}
+
+
+
+int generateLattice(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
+  int gridSize;
+  arma::mat coords;
+  if(rotate45deg){
+    gridSize = stepsBetweenCorners * 2* pow(4.0,goalLevel) + 1;
+    fractalGenerator::generateSquareCoords(coords, sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
+  }else{
+    gridSize = pow(4.0,goalLevel);
+    for(int i=0; i<goalLevel; i++){
+      gridSize+= 2*pow(4.0,i);
+    }
+    gridSize = stepsBetweenCorners* gridsize;
+    gridSize += 1;
+    fractalGenerator::generateSquareCoords(coords, (pow(4.0,goalLevel)), goalLevel, false);
+  }
+
+  return gridSize;
 }
