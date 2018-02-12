@@ -89,6 +89,7 @@ void fractalGenerator::generateSquareCoords(arma::mat& coords, double width, int
   double Ybr = -width/2.0;
   double Xbl = -width/2.0;
   double Ybl = -width/2.0;
+
   // Generate fractal structure on side of square.
   int startIndex = 0;
   fractalGenerator::generateLineCoords(coords,startIndex,Xtl,Ytl,Xtr,Ytr,goalLevel);
@@ -118,23 +119,53 @@ void fractalGenerator::rotate45deg(arma::mat& coords){
   coords.col(1)  = temp;
 }
 
+void fractalGenerator::shiftToIndexStatus(arma::mat& coords){
+  double Xmin = coords.col(0).min();
+  double Ymin = coords.col(1).min();
+  coords.col(0) = coords.col(0) - Xmin;
+  coords.col(1) = coords.col(1) - Ymin;
+}
 
 
-int generateLattice(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
+
+int generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
   int gridSize;
-  arma::mat coords;
   if(rotate45deg){
-    gridSize = stepsBetweenCorners * 2* pow(4.0,goalLevel) + 1;
-    fractalGenerator::generateSquareCoords(coords, sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
+    gridSize = stepsBetweenCorners * 2* pow(4.0,goalLevel); // + 1;
   }else{
     gridSize = pow(4.0,goalLevel);
     for(int i=0; i<goalLevel; i++){
       gridSize+= 2*pow(4.0,i);
     }
-    gridSize = stepsBetweenCorners* gridsize;
-    gridSize += 1;
-    fractalGenerator::generateSquareCoords(coords, (pow(4.0,goalLevel)), goalLevel, false);
+    gridSize = stepsBetweenCorners* gridSize;
+    //gridSize += 1;
   }
-
+  grid.zeros(gridSize,gridSize);
   return gridSize;
+}
+
+void generateMask(arma::mat& mask, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
+  // Fill in first quadrant of grid with ones if inside fractal, zero if outside.
+  int gridSize = generateEmptyGrid(mask, stepsBetweenCorners, goalLevel, rotate45deg);
+  // Set points inside of fractal to 1.
+  fractalGenerator::shiftToIndexStatus(cornerCoords);
+  for(int row=0; row < gridSize; row++){
+    for(int col=0; col < gridSize; col++){
+      mask(row,col) = isPointInside( row, col, cornerCoords);
+    }
+  }
+}
+
+double isPointInside(int row, int col, arma::mat cornerCoords){
+  // Return 1 if point is inside. Return 0 if point is outside.
+  // Count number of intersections of horizontal ray for increasing x.
+  // See W. Randolph Franklin's text at https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
+  bool isInside = false;
+  for (int i = 1, j = 0; i < cornerCoords.n_rows; j = i++) {
+    if ( ((cornerCoords(i,1)>row) != (cornerCoords(j,1)>row)) &&
+       (col < (cornerCoords(j,0)-cornerCoords(i,0)) * (row-cornerCoords(i,1)) / (cornerCoords(j,1)-cornerCoords(i,1)) + cornerCoords(i,0)) ){
+       isInside = !isInside;
+    }
+  }
+  return isInside;
 }

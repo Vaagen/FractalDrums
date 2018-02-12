@@ -13,10 +13,11 @@ namespace fractalGenerator{
   void generateLineCoords(arma::mat& coords, int startIndex, double x0, double y0, double x1, double y1, int goalLevel);
   void generateSquareCoords(arma::mat& coords, double width, int goalLevel, bool rotate45deg);
   void rotate45deg(arma::mat& coords);
+  void shiftToIndexStatus(arma::mat& coords);
 }//namespace
 
-int generateLattice(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
-
-
+int  generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
+void generateMask(arma::mat& grid, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
+double isPointInside(int row, int col, arma::mat cornerCoords);
 
 #endif // #ifndef __fractalGenerator_included__
