@@ -169,3 +169,52 @@ double isPointInside(int row, int col, arma::mat cornerCoords){
   }
   return isInside;
 }
+
+bool isPointOnBoundary(int row, int col, arma::mat& mask){
+  // If point is inside, and has neighbours that are outside, it's on the boundary.
+  // Set up to true if element above is inside. If outside mask, also set to true.
+  bool up, down, left, right;
+  int n_cols = mask.n_cols;
+  int n_rows=mask.n_rows;
+  if(row==0){
+    left = true;
+  }else{
+    left = mask(row-1,col);
+  }
+  if(row==n_rows-1){
+    right = true;
+  }else{
+    right = mask(row+1,col);
+  }
+  if(col==0){
+    down = true;
+  }else{
+    down = mask(row,col-1);
+  }
+  if(col==n_cols-1){
+    up = true;
+  }else{
+    up = mask(row,col+1);
+  }
+
+  if( mask(row,col)){
+    if( !up || !down || !left || !right ){
+      return true;
+    }else{
+      return false;
+    }
+  }else{
+    return false;
+  }
+}
+
+void includeBoundary(arma::mat& mask){
+  double boundaryValue = 2;
+  for(int row=0; row<mask.n_rows; row++){
+    for(int col=0; col<mask.n_cols; col++){
+      if(isPointOnBoundary(row,col,mask)){
+        mask(row,col)=boundaryValue;
+      }
+    }
+  }
+}

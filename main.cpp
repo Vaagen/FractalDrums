@@ -27,6 +27,7 @@ int main(int argc, char *argv[]){
   // To test rotated system
   fractalGenerator::generateSquareCoords(coords, stepsPerSide*sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
   generateMask(mask,coords, stepsPerSide, goalLevel, true);
+  includeBoundary(mask);
 
   // To test non-rotated system
   //fractalGenerator::generateSquareCoords(coords, stepsPerSide*(pow(4.0,goalLevel)), goalLevel, false);

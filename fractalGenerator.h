@@ -19,5 +19,7 @@ namespace fractalGenerator{
 int  generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
 void generateMask(arma::mat& grid, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
 double isPointInside(int row, int col, arma::mat cornerCoords);
+bool isPointOnBoundary(int row, int col, arma::mat& mask);
+void includeBoundary(arma::mat& mask);
 
 #endif // #ifndef __fractalGenerator_included__
