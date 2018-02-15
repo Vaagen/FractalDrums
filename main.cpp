@@ -19,19 +19,31 @@ int main(int argc, char *argv[]){
   if (argc>2){
     outputFile = argv[2];
   }
+  // Getting rotated
+  bool rotate=false;
+  if (argc>3){
+    std::istringstream ss(argv[3]);
+    if (!(ss >> rotate)){
+      std::cerr << "Invalid number " << argv[3] << '\n';
+    }
+  }
   // Calculating corners.
   arma::mat coords;
   arma::mat mask;
   int stepsPerSide = 8;
 
-  // To test rotated system
-  fractalGenerator::generateSquareCoords(coords, stepsPerSide*sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
-  generateMask(mask,coords, stepsPerSide, goalLevel, true);
+  if(rotate){
+    // To test rotated system
+    fractalGenerator::generateSquareCoords(coords, stepsPerSide*sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
+    generateMask(mask,coords, stepsPerSide, goalLevel, true);
+  }else if (!rotate){
+    // To test non-rotated system
+    fractalGenerator::generateSquareCoords(coords, stepsPerSide*(pow(4.0,goalLevel)), goalLevel, false);
+    generateMask(mask,coords, stepsPerSide, goalLevel, false);
+  }
+
   includeBoundary(mask);
 
-  // To test non-rotated system
-  //fractalGenerator::generateSquareCoords(coords, stepsPerSide*(pow(4.0,goalLevel)), goalLevel, false);
-  //generateMask(mask,coords, stepsPerSide, goalLevel, false);
 
   // Saving output.
   std::ofstream outFile;
