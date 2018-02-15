@@ -128,9 +128,7 @@ void fractalGenerator::shiftToIndexStatus(arma::mat& coords){
   coords.col(1) = coords.col(1) - Ymin;
 }
 
-
-
-int generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
+int fractalGenerator::generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
   int gridSize;
   if(rotate45deg){
     gridSize = stepsBetweenCorners * 2* pow(4.0,goalLevel); // + 1;
@@ -146,7 +144,7 @@ int generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, b
   return gridSize;
 }
 
-void generateMask(arma::mat& mask, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
+void fractalGenerator::generateMask(arma::mat& mask, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg){
   // Fill in first quadrant of grid with ones if inside fractal, zero if outside.
   int gridSize = generateEmptyGrid(mask, stepsBetweenCorners, goalLevel, rotate45deg);
   // Set points inside of fractal to 1.
@@ -157,6 +155,8 @@ void generateMask(arma::mat& mask, arma::mat cornerCoords, int stepsBetweenCorne
     }
   }
 }
+
+
 
 double isPointInside(int row, int col, arma::mat cornerCoords){
   // Return 1 if point is inside. Return 0 if point is outside.

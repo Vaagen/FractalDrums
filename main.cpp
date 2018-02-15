@@ -35,11 +35,11 @@ int main(int argc, char *argv[]){
   if(rotate){
     // To test rotated system
     fractalGenerator::generateSquareCoords(coords, stepsPerSide*sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
-    generateMask(mask,coords, stepsPerSide, goalLevel, true);
+    fractalGenerator::generateMask(mask,coords, stepsPerSide, goalLevel, true);
   }else if (!rotate){
     // To test non-rotated system
     fractalGenerator::generateSquareCoords(coords, stepsPerSide*(pow(4.0,goalLevel)), goalLevel, false);
-    generateMask(mask,coords, stepsPerSide, goalLevel, false);
+    fractalGenerator::generateMask(mask,coords, stepsPerSide, goalLevel, false);
   }
 
   includeBoundary(mask);

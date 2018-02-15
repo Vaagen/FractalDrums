@@ -14,10 +14,10 @@ namespace fractalGenerator{
   void generateSquareCoords(arma::mat& coords, double width, int goalLevel, bool rotate45deg);
   void rotate45deg(arma::mat& coords);
   void shiftToIndexStatus(arma::mat& coords);
+  int  generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
+  void generateMask(arma::mat& grid, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
 }//namespace
 
-int  generateEmptyGrid(arma::mat& grid, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
-void generateMask(arma::mat& grid, arma::mat cornerCoords, int stepsBetweenCorners, int goalLevel, bool rotate45deg);
 double isPointInside(int row, int col, arma::mat cornerCoords);
 bool isPointOnBoundary(int row, int col, arma::mat& mask);
 void includeBoundary(arma::mat& mask);
