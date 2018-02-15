@@ -74,7 +74,9 @@ void fractalGenerator::generateLineCoords(arma::mat& coords, int startIndex, dou
   coords(startIndex,1)=y0;
   coords(endIndex,0)=x1;
   coords(endIndex,1)=y1;
-  fractalGenerator::generator(coords,startIndex,endIndex,1,goalLevel);
+  if(goalLevel>0){
+    fractalGenerator::generator(coords,startIndex,endIndex,1,goalLevel);
+  }
 }
 
 void fractalGenerator::generateSquareCoords(arma::mat& coords, double width, int goalLevel, bool rotate45deg){
