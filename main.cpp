@@ -27,6 +27,22 @@ int main(int argc, char *argv[]){
       std::cerr << "Invalid number " << argv[3] << '\n';
     }
   }
+
+  // Test making of sparse matrices needed.
+  int N = 7;
+  arma::sp_mat testSparse(N,N);
+  testSparse.speye();
+  testSparse*=4;
+  testSparse.print();
+
+  testSparse(0,1)=-1;
+  for(int i=1; i<(testSparse.n_rows-1); i++){
+    std::cout << i << testSparse.n_rows << std::endl;
+    testSparse(i,i-1)=testSparse(i,i+1)=-1;
+  }
+  testSparse(testSparse.n_rows-1,testSparse.n_rows-2)=-1;
+  testSparse.print();
+
   // Calculating corners.
   arma::mat coords;
   arma::mat mask;
