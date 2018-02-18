@@ -8,6 +8,7 @@
 
 namespace eigenSolver{
   void getHelmholtzMatrix(arma::sp_mat& sparseA, int N);
+  void removeColumns(arma::sp_mat& sparseA, arma::mat& domain);
   }//namespace
 
 #endif // #ifndef __eigenSolver_included__

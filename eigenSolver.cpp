@@ -25,3 +25,11 @@ void eigenSolver::getHelmholtzMatrix(arma::sp_mat& sparseA, int N){
   sparseA.rows(N*(N-1),N*N-1).cols(N*(N-2),N*(N-1)-1)=-sparseIdentity;
   sparseA.rows(N*(N-1),N*N-1).cols(N*(N-1),N*N-1)=sparseT;
 }
+
+void eigenSolver::removeColumns(arma::sp_mat& sparseA, arma::mat& domain){
+  for(int i=0; i<domain.n_elem; i++){
+    if( ! domain(i)){
+      sparseA.col(i)=arma::zeros(sparseA.n_rows,1);
+    }
+  }
+}
