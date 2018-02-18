@@ -29,7 +29,7 @@ void eigenSolver::getHelmholtzMatrix(arma::sp_mat& sparseA, int N){
 void eigenSolver::removeColumns(arma::sp_mat& sparseA, arma::mat& domain){
   for(int i=0; i<domain.n_elem; i++){
     if( ! domain(i)){
-      sparseA.col(i)=arma::zeros(sparseA.n_rows,1);
+      sparseA.col(i).zeros();
     }
   }
 }
