@@ -41,8 +41,7 @@ int main(int argc, char *argv[]){
   // Calculating corners.
   arma::mat coords;
   arma::mat mask;
-  int stepsPerSide = 4;
-
+  int stepsPerSide = 10;
   std::cout << " Calculating corners, with " << stepsPerSide << " steps per side." << std::endl;
   printTime(start_s);
   if(rotate){
@@ -108,6 +107,16 @@ int main(int argc, char *argv[]){
   arma::eigs_gen(eigval, eigvec, A, numberOfEigenvalues, "sm");
   std::cout << " Finished calculating eigenvalues and vectors." << std::endl;
   printTime(start_s);
+
+  // Output eigenstate
+  arma::cx_mat state(N,N);
+  state.zeros();
+  for(int i=0; i<eigvec.col(0).n_elem-1; i++){
+    state(indexVec(i))=eigvec(i,9);
+  }
+  arma::mat realState(N,N);
+  realState = arma::conv_to< arma::mat >::from(state);
+  realState.save("state.dat", arma::raw_ascii);
 
   // Saving output.
   eigval.save("eigval.dat", arma::raw_ascii);
