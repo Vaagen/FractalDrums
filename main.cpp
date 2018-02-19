@@ -43,6 +43,8 @@ int main(int argc, char *argv[]){
   arma::mat mask;
   int stepsPerSide = 4;
 
+  std::cout << " Calculating corners, with " << stepsPerSide << " steps per side." << std::endl;
+  printTime(start_s);
   if(rotate){
     // To test rotated system
     fractalGenerator::generateSquareCoords(coords, stepsPerSide*sqrt(2.0)*(pow(4.0,goalLevel)), goalLevel, true);
@@ -53,6 +55,8 @@ int main(int argc, char *argv[]){
     fractalGenerator::generateMask(mask,coords, stepsPerSide, goalLevel, false);
   }
 
+  std::cout << " Setting up sparse matrix." << std::endl;
+  printTime(start_s);
   // Vector to store index of elements inside domain.
   arma::vec indexVec;
   int insertedElements=0;
@@ -82,6 +86,10 @@ int main(int argc, char *argv[]){
   }
   A.print();
 
+  std::cout << " Calculating "<< numberOfEigenvalues << " first eigenvalues and vectors." << std::endl;
+  printTime(start_s);
+  std::cout << " Finished calculating eigenvalues and vectors." << std::endl;
+  printTime(start_s);
 
   // Saving output.
   std::ofstream outFile;
