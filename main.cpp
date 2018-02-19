@@ -1,4 +1,5 @@
 #include "fractalGenerator.h"
+#include "eigenSolver.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -28,44 +29,10 @@ int main(int argc, char *argv[]){
     }
   }
 
-  // Test making of sparse matrices needed.
-  int N = goalLevel;
-  arma::sp_mat sparseT(N-1,N-1);
-  sparseT.speye();
-  sparseT*=4;
-  //sparseT.print();
-
-  sparseT(0,1)=-1;
-  for(int i=1; i<(sparseT.n_rows-1); i++){
-    sparseT(i,i-1)=sparseT(i,i+1)=-1;
-  }
-  sparseT(sparseT.n_rows-1,sparseT.n_rows-2)=-1;
-  //sparseT.print();
-
-  arma::sp_mat sparseIdentity(N-1,N-1);
-  sparseIdentity.speye();
-  //sparseIdentity.print();
-
-  arma::sp_mat sparseA((N-1)*N,(N-1)*N);
-  sparseA.rows(0,(N-2)).cols(0,N-2)=sparseT;
-  sparseA.rows(0,(N-2)).cols(N-1,2*(N-1)-1)=-sparseIdentity;
-  for(int i=1; i<(N-1); i++){
-    sparseA.rows(i*(N-1),(i+1)*(N-1)-1).cols((i-1)*(N-1),i*(N-1)-1)=-sparseIdentity;
-    sparseA.rows(i*(N-1),(i+1)*(N-1)-1).cols(i*(N-1),(i+1)*(N-1)-1)=sparseT;
-    sparseA.rows(i*(N-1),(i+1)*(N-1)-1).cols((i+1)*(N-1),(i+2)*(N-1)-1)=-sparseIdentity;
-  }
-  sparseA.rows((N-1)*(N-1),N*(N-1)-1).cols((N-2)*(N-1),(N-1)*(N-1)-1)=-sparseIdentity;
-  sparseA.rows((N-1)*(N-1),N*(N-1)-1).cols((N-1)*(N-1),N*(N-1)-1)=sparseT;
-  //sparseA.print();
-
-  // Now, how to use the grid as a column vector? Note, it's a dense matrix.
-
-  return 0;
-
   // Calculating corners.
   arma::mat coords;
   arma::mat mask;
-  int stepsPerSide = 8;
+  int stepsPerSide = 4;
 
   if(rotate){
     // To test rotated system
@@ -77,7 +44,34 @@ int main(int argc, char *argv[]){
     fractalGenerator::generateMask(mask,coords, stepsPerSide, goalLevel, false);
   }
 
-  includeBoundary(mask);
+  // Vector to store index of elements inside domain.
+  arma::vec indexVec;
+  int insertedElements=0;
+  eigenSolver::getIndexVec(indexVec, mask);
+
+  // Set up sparse matrix A to represent eigensystem.
+  arma::sp_mat A(indexVec.n_elem,indexVec.n_elem);
+  A.speye();
+  A*=4;
+  int N = mask.n_cols;
+  int col = 0;
+  int index =0;
+  for(int row=0; row<A.n_rows; row++){
+    index = indexVec(row);
+    // If point to the right is inside domain, and not on right side, and row<N*N, assign -1 to left value.
+    if(row<(N*N-1)){
+      if(mask(index+1) && (index%N)!=N-1 ){
+        A(row,row+1)=-1;
+      }
+    }
+    // If point to the left is inside domain, and not on left side, and row>0, assign -1 to left value.
+    if(row >0){
+      if(mask(index-1) && (index%N) ) {
+        A(row,row-1)=-1;
+      }
+    }
+  }
+  A.print();
 
 
   // Saving output.

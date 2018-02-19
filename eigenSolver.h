@@ -7,8 +7,7 @@
 #include <math.h>
 
 namespace eigenSolver{
-  void getHelmholtzMatrix(arma::sp_mat& sparseA, int N);
-  void removeColumns(arma::sp_mat& sparseA, arma::mat& domain);
+void getIndexVec(arma::vec& indexVec, arma::mat& mask);
   }//namespace
 
 #endif // #ifndef __eigenSolver_included__
