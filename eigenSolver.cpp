@@ -14,6 +14,22 @@ void eigenSolver::getIndexVec(arma::vec& indexVec, arma::mat& mask){
   }
 }
 
+void eigenSolver::getIndexVec_Mat(arma::vec& indexVec, arma::mat& mask, arma::mat& indexMat){
+  // Vector to store index of elements inside domain.
+  indexVec = arma::zeros(arma::accu(mask));
+  indexMat.zeros(mask.n_rows,mask.n_cols);
+  indexMat --;
+  // Insert index of elements inside domain
+  int insertedElements=0;
+  for(int i=0; i<mask.n_elem; i++){
+    if(mask(i)){
+      indexVec(insertedElements)=i;
+      indexMat(i)=insertedElements;
+      insertedElements ++;
+    }
+  }
+}
+
 
 
 
