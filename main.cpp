@@ -60,7 +60,8 @@ int main(int argc, char *argv[]){
   // Vector to store index of elements inside domain.
   arma::vec indexVec;
   int insertedElements=0;
-  eigenSolver::getIndexVec(indexVec, mask);
+  arma::mat indexMat;
+  eigenSolver::getIndexVec_Mat(indexVec, mask, indexMat);
 
   // Set up sparse matrix A to represent eigensystem.
   arma::sp_mat A(indexVec.n_elem,indexVec.n_elem);
@@ -71,27 +72,47 @@ int main(int argc, char *argv[]){
   int index =0;
   for(int row=0; row<A.n_rows; row++){
     index = indexVec(row);
-    // If point to the right is inside domain, and not on right side, and row<N*N, assign -1 to left value.
-    if(row<(N*N-1)){
-      if(mask(index+1) && (index%N)!=N-1 ){
-        A(row,row+1)=-1;
+    // If point to the right is inside domain, assign -1 to right value.
+    if(mask.in_range(index+N)){
+      if(mask(index+N)){
+        A(row,indexMat(index+N))=-1;
       }
     }
-    // If point to the left is inside domain, and not on left side, and row>0, assign -1 to left value.
-    if(row >0){
-      if(mask(index-1) && (index%N) ) {
-        A(row,row-1)=-1;
+    // If point to the left is inside domain, assign -1 to left value.
+    if(mask.in_range(index-N)){
+      if(mask(index-N)) {
+        A(row,indexMat(index-N))=-1;
+      }
+    }
+    // If point above is inside domain, assign -1 to above value.
+    if(mask.in_range(index-1)){
+      if(mask(index-1)){
+        A(row,indexMat(index-1))=-1;
+      }
+    }
+    // If point under is inside domain, assign -1 to value below.
+    if(mask.in_range(index+1)){
+      if(mask(index+1)) {
+        A(row,indexMat(index+1))=-1;
       }
     }
   }
-  A.print();
 
+  // Calculating eigenvalues and vectors.
+  int numberOfEigenvalues=10;
   std::cout << " Calculating "<< numberOfEigenvalues << " first eigenvalues and vectors." << std::endl;
   printTime(start_s);
+  arma::cx_vec eigval;
+  arma::cx_mat eigvec;
+
+  arma::eigs_gen(eigval, eigvec, A, numberOfEigenvalues, "sm");
   std::cout << " Finished calculating eigenvalues and vectors." << std::endl;
   printTime(start_s);
 
   // Saving output.
+  eigval.save("eigval.dat", arma::raw_ascii);
+  eigvec.save("eigvec.dat", arma::raw_ascii);
+
   std::ofstream outFile;
   outFile.open(outputFile);
   outFile << coords << std::endl;
