@@ -95,6 +95,13 @@ int main(int argc, char *argv[]){
       }
     }
   }
+  
+  // Don't need the indexVec or indexMat any more.
+  indexMat.clear();
+  indexVec.clear();
+
+  // Don't need mask anymore.
+  mask.clear();
 
   // Calculating eigenvalues and vectors.
   int numberOfEigenvalues=10;
