@@ -58,7 +58,6 @@ int main(int argc, char *argv[]){
   printTime(start_s);
   // Vector to store index of elements inside domain.
   arma::vec indexVec;
-  int insertedElements=0;
   arma::mat indexMat;
   eigenSolver::getIndexVec_Mat(indexVec, mask, indexMat);
 
@@ -71,26 +70,26 @@ int main(int argc, char *argv[]){
   int index =0;
   for(int row=0; row<A.n_rows; row++){
     index = indexVec(row);
-    // If point to the right is inside domain, assign -1 to right value.
+    // If point to the right is inside domain, and not outside outer boarder, assign -1 to right value.
     if(mask.in_range(index+N)){
       if(mask(index+N)){
         A(row,indexMat(index+N))=-1;
       }
     }
-    // If point to the left is inside domain, assign -1 to left value.
+    // If point to the left is inside domain, and not outside outer boarder, assign -1 to left value.
     if(mask.in_range(index-N)){
       if(mask(index-N)) {
         A(row,indexMat(index-N))=-1;
       }
     }
-    // If point above is inside domain, assign -1 to above value.
-    if(mask.in_range(index-1)){
+    // If point above is inside domain, and not above outer boarder, assign -1 to above value.
+    if(mask.in_range(index-1) && (index%N)!= 0 ){
       if(mask(index-1)){
         A(row,indexMat(index-1))=-1;
       }
     }
-    // If point under is inside domain, assign -1 to value below.
-    if(mask.in_range(index+1)){
+    // If point under is inside domain, and not below outer boarder, assign -1 to value below.
+    if(mask.in_range(index+1) && (index%N)!=(N-1) ){
       if(mask(index+1)) {
         A(row,indexMat(index+1))=-1;
       }
