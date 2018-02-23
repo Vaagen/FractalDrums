@@ -66,6 +66,7 @@ int main(int argc, char *argv[]){
   A.speye();
   A*=4;
   int N = mask.n_cols;
+  std::cout << " Value of N: " << N << std::endl;
   int col = 0;
   int index =0;
   for(int row=0; row<A.n_rows; row++){
@@ -98,31 +99,38 @@ int main(int argc, char *argv[]){
   
   // Don't need the indexVec or indexMat any more.
   indexMat.clear();
-  indexVec.clear();
+  // Need indexvec to save the state in matrix mode later.
+  indexVec.save("indexVec.dat", arma::raw_ascii);
+  //indexVec.clear();
 
   // Don't need mask anymore.
+  //mask.save("mask_mat.dat", arma::raw_ascii);
   mask.clear();
 
   // Calculating eigenvalues and vectors.
   int numberOfEigenvalues=10;
   std::cout << " Calculating "<< numberOfEigenvalues << " first eigenvalues and vectors." << std::endl;
   printTime(start_s);
-  arma::cx_vec eigval;
-  arma::cx_mat eigvec;
+  arma::vec eigval;
+  arma::mat eigvec;
 
-  arma::eigs_gen(eigval, eigvec, A, numberOfEigenvalues, "sm");
+
+
+  if(!arma::eigs_sym(eigval, eigvec, A, numberOfEigenvalues, "sa")){
+    std::cout << " Eigenvectors and values not found." << std::endl;
+    printTime(start_s);
+    return 0;
+  }
   std::cout << " Finished calculating eigenvalues and vectors." << std::endl;
   printTime(start_s);
 
   // Output eigenstate
-  arma::cx_mat state(N,N);
+  arma::mat state(N,N);
   state.zeros();
   for(int i=0; i<eigvec.col(0).n_elem-1; i++){
     state(indexVec(i))=eigvec(i,9);
   }
-  arma::mat realState(N,N);
-  realState = arma::conv_to< arma::mat >::from(state);
-  realState.save("state.dat", arma::raw_ascii);
+  state.save("state.dat", arma::raw_ascii);
 
   // Saving output.
   eigval.save("eigval.dat", arma::raw_ascii);
@@ -133,7 +141,6 @@ int main(int argc, char *argv[]){
   outFile << coords << std::endl;
   outFile.close();
 
-  mask.save("A_mat.dat", arma::raw_ascii);
 
   return 0;
 }
