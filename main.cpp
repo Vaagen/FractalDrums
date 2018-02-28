@@ -6,14 +6,14 @@
 #include <ctime>
 
 
-void printTime(int start_s){
-  int stop_s=clock();
+void printTime(double start_s){
+  double stop_s=clock();
   std::cout << "    Seconds since start: " << (stop_s-start_s)/double(CLOCKS_PER_SEC) << std::endl;
 }
 
 int main(int argc, char *argv[]){
   // Starting timer.
-  int start_s=clock();
+  double start_s=clock();
   // Getting goalLevel.
   int goalLevel;
   if (argc <2){
