@@ -133,6 +133,11 @@ int main(int argc, char *argv[]){
   std::cout << " Finished calculating eigenvalues and vectors." << std::endl;
   printTime(start_s);
 
+  // Correct eigenvalues
+  double L    = 0.076;
+  double h  = L/(N-1);
+  eigval = eigval/(h*h);
+
   // Output eigenstate
   arma::mat state(N,N);
   state.zeros();
@@ -149,7 +154,6 @@ int main(int argc, char *argv[]){
   outFile.open(outputFile);
   outFile << coords << std::endl;
   outFile.close();
-
 
   return 0;
 }
