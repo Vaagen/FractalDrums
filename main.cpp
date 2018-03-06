@@ -96,7 +96,17 @@ int main(int argc, char *argv[]){
       }
     }
   }
-  
+
+  // std::ofstream outFileC;
+  // outFileC.open("coordsToCad.scr");
+  // outFileC << "._PLINE" << std::endl;
+  // for(int i=0; i<coords.n_rows; i++){
+  //   outFileC << coords(i,0) << "," << coords(i,1) << std::endl;
+  // }
+  // outFileC.close();
+  // return 0;
+
+
   // Don't need the indexVec or indexMat any more.
   indexMat.clear();
   // Need indexvec to save the state in matrix mode later.
