@@ -124,9 +124,8 @@ int main(int argc, char *argv[]){
   arma::vec eigval;
   arma::mat eigvec;
 
-
-
-  if(!arma::eigs_sym(eigval, eigvec, A, numberOfEigenvalues, "sa")){
+  // If eigenvalues not found, can change tolerance and number of eigenvalues
+  if(!arma::eigs_sym(eigval, eigvec, A, numberOfEigenvalues, "sm")){
     std::cout << " Eigenvectors and values not found." << std::endl;
     printTime(start_s);
     return 0;
