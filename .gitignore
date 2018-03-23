@@ -2,3 +2,17 @@
 .DS_Store
 Inclusion of a Point in a Polygon.webarchive
 *.mw
+*.dat
+*.gz
+*.aux
+*.log
+*.out
+run
+
+*.dat
+*.gz
+*.aux
+*.log
+*.out
+run
+*.scr
